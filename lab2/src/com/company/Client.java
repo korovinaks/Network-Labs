@@ -32,6 +32,8 @@ public class Client {
                     break;
                 }
             }
+            in_file.close();
+
             client.shutdownOutput();
 
             protocol.get_result(in);
