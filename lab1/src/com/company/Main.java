@@ -2,6 +2,8 @@ package com.company;
 
 import java.net.InetAddress;
 
+import static java.lang.Thread.sleep;
+
 public class Main {
     private final static int port = 33333;
 
@@ -14,11 +16,16 @@ public class Main {
             InetAddress group = InetAddress.getByName(args[0]);
 
             MulticastSender sender = new MulticastSender(group, port);
-            sender.start();
 
             MulticastReceiver receiver = new MulticastReceiver(group, port);
-            receiver.start();
 
+            while (true) {
+                sender.send();
+
+                receiver.read();
+
+                sleep(500);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

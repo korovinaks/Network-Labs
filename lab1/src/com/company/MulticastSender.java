@@ -6,32 +6,37 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 
 
-public class MulticastSender extends Thread {
+public class MulticastSender {
 
-    private final static int sleep_time = 1000;
+    private final static int CHECK_TIMEOUT = 1000;
     private final static String message = "Hello";
+    private long lastTime;
     protected int port;
     protected InetAddress group;
 
     public MulticastSender ( InetAddress group, int port) {
         this.port = port;
         this.group = group;
+        lastTime = System.currentTimeMillis();
     }
 
-    public void run() {
-        while(true)  {
-            try {
-                MulticastSocket sender = new MulticastSocket();
+    public void send() {
+        if (System.currentTimeMillis() - lastTime <= CHECK_TIMEOUT) {
+            return;
+        }
 
-                DatagramPacket packet = new DatagramPacket(message.getBytes(), message.length(), group, port);
-                sender.send(packet);
+        lastTime = System.currentTimeMillis();
 
-                sender.close();
+        try {
+            MulticastSocket sender = new MulticastSocket();
 
-                sleep(sleep_time);
-            } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
-            }
+            DatagramPacket packet = new DatagramPacket(message.getBytes(), message.length(), group, port);
+            sender.send(packet);
+
+            sender.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
