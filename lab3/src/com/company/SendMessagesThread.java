@@ -36,6 +36,9 @@ public class SendMessagesThread extends Thread {
                 int port_target = message_to_deliver.getValue().get_port_target();
                 DatagramPacket packet = new DatagramPacket(baos.toByteArray(), baos.size(), ip_target, port_target);
 
+                oos.close();
+                baos.close();
+
                 sender.send(packet);
 
                 sender.close();

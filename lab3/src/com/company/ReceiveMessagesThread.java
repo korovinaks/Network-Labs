@@ -39,6 +39,9 @@ public class ReceiveMessagesThread extends Thread {
                 MessageObject message_delivered = (MessageObject) ois.readObject();
                 int port_sender = message_delivered.get_port_sender();
 
+                ois.close();
+                bais.close();
+
                 node_server.new_message_received(id, message_delivered, ip_sender, port_sender);
             }
 
